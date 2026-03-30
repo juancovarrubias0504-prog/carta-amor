@@ -1,0 +1,440 @@
+const pantallaInicial = document.getElementById("pantalla-inicial");
+const pantallaPrincipal = document.getElementById("pantalla-principal");
+const copa = document.getElementById("copa");
+const contador = document.getElementById("contador");
+const lluviaRosas = document.getElementById("lluvia-rosas");
+const musicaYT = document.getElementById("musicaYT");
+
+const fechaInicio = new Date("2024-10-31T00:00:00");
+
+let contadorIniciado = false;
+let lluviaIniciada = false;
+let musicaIniciada = false;
+
+function abrirCarta() {
+
+    const musica = document.getElementById("musicaFondo");
+    musica.volume = 0.4;
+    musica.play().catch(() => {});
+
+    pantallaInicial.style.display = "none";
+    pantallaPrincipal.style.display = "flex";
+
+    crearCorazonDeRosas();
+
+    if (!contadorIniciado) {
+        iniciarContador();
+        contadorIniciado = true;
+    }
+
+    if (!lluviaIniciada) {
+        iniciarLluviaDeRosas();
+        lluviaIniciada = true;
+    }
+}
+
+function crearCorazonDeRosas() {
+    copa.innerHTML = "";
+
+    const puntos = [];
+    const escala = 8.5;
+    const centroX = 170;
+    const centroY = 145;
+
+    for (let t = 0; t < Math.PI * 2; t += 0.12) {
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+
+        puntos.push({
+            x: centroX + x * escala,
+            y: centroY - y * escala,
+            delay: puntos.length * 0.03
+        });
+    }
+
+    for (let t = 0; t < Math.PI * 2; t += 0.22) {
+        for (let factor = 0.2; factor <= 0.75; factor += 0.18) {
+            const x = 16 * Math.pow(Math.sin(t), 3) * factor;
+            const y = (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * factor;
+
+            puntos.push({
+                x: centroX + x * escala,
+                y: centroY - y * escala,
+                delay: 1 + puntos.length * 0.01
+            });
+        }
+    }
+
+    const union = [
+        { x: 170, y: 240 },
+        { x: 165, y: 252 },
+        { x: 175, y: 252 },
+        { x: 160, y: 265 },
+        { x: 180, y: 265 },
+        { x: 170, y: 278 }
+    ];
+
+    for (let i = 0; i < union.length; i++) {
+        puntos.push({
+            x: union[i].x,
+            y: union[i].y,
+            delay: 2 + i * 0.05
+        });
+    }
+
+    for (let i = 0; i < puntos.length; i++) {
+        const rosa = document.createElement("div");
+        rosa.classList.add("rosa");
+        rosa.style.left = puntos[i].x + "px";
+        rosa.style.top = puntos[i].y + "px";
+        rosa.style.animationDelay = puntos[i].delay + "s";
+        copa.appendChild(rosa);
+    }
+}
+
+function iniciarContador() {
+    actualizarContador();
+    setInterval(actualizarContador, 1000);
+}
+
+function actualizarContador() {
+    const ahora = new Date();
+    const diferencia = ahora - fechaInicio;
+
+    const segundosTotales = Math.floor(diferencia / 1000);
+
+    const dias = Math.floor(segundosTotales / (60 * 60 * 24));
+    const horas = Math.floor((segundosTotales % (60 * 60 * 24)) / (60 * 60));
+    const minutos = Math.floor((segundosTotales % (60 * 60)) / 60);
+    const segundos = segundosTotales % 60;
+
+    contador.textContent =
+        dias + " días " +
+        horas + " horas " +
+        minutos + " minutos " +
+        segundos + " segundos";
+}
+
+function iniciarLluviaDeRosas() {
+    setInterval(crearPetalo, 350);
+}
+
+function crearPetalo() {
+    const petalo = document.createElement("div");
+    petalo.classList.add("petalo");
+    petalo.textContent = "🌹";
+
+    petalo.style.left = Math.random() * 100 + "vw";
+    petalo.style.animationDuration = 6 + Math.random() * 5 + "s";
+    petalo.style.fontSize = 14 + Math.random() * 10 + "px";
+
+    lluviaRosas.appendChild(petalo);
+
+    setTimeout(function () {
+        petalo.remove();
+    }, 12000);
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    overflow: hidden;
+    background: #f6ece6;
+}
+
+/* Pantallas */
+.pantalla {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Pantalla inicial */
+#pantalla-inicial {
+    background: radial-gradient(circle, #7a0019, #300008);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.fondo-corazones {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0 20px, transparent 21px),
+        radial-gradient(circle at 70% 25%, rgba(255,255,255,0.05) 0 18px, transparent 19px),
+        radial-gradient(circle at 40% 75%, rgba(255,255,255,0.06) 0 22px, transparent 23px),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 0 15px, transparent 16px);
+    filter: blur(8px);
+}
+
+.contenido-inicial {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 30px;
+}
+
+.rosa-btn {
+    font-size: 95px;
+    margin-bottom: 15px;
+    user-select: none;
+}
+
+.titulo-inicial {
+    font-size: 3.2rem;
+    margin-bottom: 8px;
+    font-style: italic;
+    letter-spacing: 1px;
+}
+
+.texto-inicial {
+    font-size: 1.3rem;
+    margin-bottom: 22px;
+    opacity: 0.95;
+}
+
+.boton-romantico {
+    border: none;
+    padding: 14px 30px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ff4d6d, #c9184a);
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.20);
+}
+
+.boton-romantico:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* Pantalla principal */
+#pantalla-principal {
+    background: linear-gradient(180deg, #f8efea, #f6ece6);
+    color: #5a1b1b;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    padding: 20px;
+}
+
+#lluvia-rosas {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.petalo {
+    position: absolute;
+    top: -30px;
+    font-size: 18px;
+    animation: caer linear forwards;
+    opacity: 0.9;
+}
+
+.contenedor {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 980px;
+    width: 100%;
+}
+
+.texto-superior {
+    font-size: 1.5rem;
+    color: #8b0000;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    font-style: italic;
+}
+
+.contenedor h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #5a1111;
+}
+
+.frase {
+    font-size: 1.4rem;
+    margin-bottom: 24px;
+    color: #6b2b2b;
+}
+
+.carta {
+    max-width: 760px;
+    margin: 0 auto 28px auto;
+    background: rgba(255, 255, 255, 0.62);
+    border: 1px solid rgba(120, 50, 50, 0.12);
+    padding: 22px 26px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(90, 27, 27, 0.08);
+    font-size: 1.08rem;
+    line-height: 1.9;
+    color: #5b2a2a;
+    backdrop-filter: blur(2px);
+}
+
+.carta p {
+    margin-bottom: 14px;
+}
+
+.carta p:last-child {
+    margin-bottom: 0;
+}
+
+.arbol-corazon {
+    position: relative;
+    width: 460px;
+    height: 430px;
+    margin: 0 auto 18px auto;
+}
+
+.tronco {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 135px;
+    background: linear-gradient(180deg, #7a4a2b, #5b341d);
+    border-radius: 10px;
+}
+
+.copa {
+    position: absolute;
+    bottom: 95px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 340px;
+    height: 280px;
+}
+
+.rosa {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffb3c1, #d90429 58%, #7f0018 100%);
+    box-shadow: 0 0 8px rgba(180, 0, 30, 0.25);
+    opacity: 0;
+    animation: brotar 0.7s forwards;
+}
+
+.rosa::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #ffd98a;
+    border-radius: 50%;
+    top: 6px;
+    left: 6px;
+    opacity: 0.85;
+}
+
+.contador-texto {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #6b2b2b;
+}
+
+.contador {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #a00028;
+}
+
+@keyframes brotar {
+    from {
+        transform: scale(0.2);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes caer {
+    from {
+        transform: translateY(-40px) rotate(0deg);
+    }
+    to {
+        transform: translateY(110vh) rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .titulo-inicial {
+        font-size: 2.3rem;
+    }
+
+    .texto-inicial {
+        font-size: 1.1rem;
+    }
+
+    .boton-romantico {
+        font-size: 0.95rem;
+        padding: 12px 22px;
+    }
+
+    #pantalla-principal {
+        align-items: flex-start;
+        overflow-y: auto;
+        padding-top: 25px;
+        padding-bottom: 35px;
+    }
+
+    .contenedor h1 {
+        font-size: 2rem;
+    }
+
+    .frase {
+        font-size: 1.08rem;
+    }
+
+    .carta {
+        font-size: 1rem;
+        padding: 16px 18px;
+        margin-bottom: 20px;
+    }
+
+    .arbol-corazon {
+        width: 320px;
+        height: 360px;
+    }
+
+    .copa {
+        width: 260px;
+        height: 220px;
+        bottom: 90px;
+    }
+
+    .tronco {
+        height: 115px;
+        width: 34px;
+    }
+
+    .contador {
+        font-size: 1.35rem;
+        line-height: 1.5;
+    }
+}
