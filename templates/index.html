@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon amour</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <iframe
+        id="musicaYT"
+        width="0"
+        height="0"
+        src=""
+        frameborder="0"
+        allow="autoplay"
+        allowfullscreen>
+    </iframe>
+
+    <section id="pantalla-inicial" class="pantalla">
+        <div class="fondo-corazones"></div>
+
+        <div class="contenido-inicial">
+            <div class="rosa-btn">🌹</div>
+            <h1 class="titulo-inicial">Mon amour</h1>
+            <p class="texto-inicial">This is for you</p>
+            <button id="botonEntrada" class="boton-romantico" onclick="abrirCarta()">
+                Continue
+            </button>
+        </div>
+    </section>
+
+    <section id="pantalla-principal" class="pantalla">
+        <div id="lluvia-rosas"></div>
+
+        <div class="contenedor">
+            <p class="texto-superior">Mon amour ❤️</p>
+            <h1>Para la mujer más hermosa de mi vida</h1>
+
+            <p class="frase">
+                Si pudiera elegir un lugar seguro en todo el mundo, siempre sería a tu lado.
+            </p>
+
+            <div class="carta">
+                <p>
+                    Desde que llegaste a mi vida, todo se siente más bonito, más cálido y más verdadero.
+                    Eres esa paz que no sabía que necesitaba, esa sonrisa que me cambia el día
+                    y ese amor que le dio un significado más lindo a mi corazón.
+                </p>
+
+                <p>
+                    Gracias por existir, por tu ternura, por tu forma de ser, por cada abrazo,
+                    por cada mirada y por cada momento que hemos compartido.
+                    Desde el 31 de octubre de 2024, mi mundo tiene tu nombre
+                    y mis días tienen una razón más hermosa para sonreír.
+                </p>
+
+                <p>
+                    Si volviera a empezar mil veces, en cada una de ellas te volvería a elegir a ti.
+                    Porque entre todas las casualidades bonitas de esta vida,
+                    tú siempre serías mi favorita.
+                </p>
+            </div>
+
+            <div class="arbol-corazon">
+                <div class="tronco"></div>
+                <div class="copa" id="copa"></div>
+            </div>
+
+            <p class="contador-texto">Con la mujer perfecta desde hace...</p>
+            <div id="contador" class="contador">
+                0 días 0 horas 0 minutos 0 segundos
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+<audio id="musicaFondo" loop>
+    <source src="{{ url_for('static', filename='musica.mp3') }}" type="audio/mpeg">
+</audio>
+</html>
