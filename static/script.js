@@ -438,3 +438,7 @@ body {
         line-height: 1.5;
     }
 }
+window.onload = function () {
+    pantallaInicial.style.display = "flex";
+    pantallaPrincipal.style.display = "none";
+};
